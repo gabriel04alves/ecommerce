@@ -5,8 +5,9 @@ import * as jwt from "jsonwebtoken";
 import { JWT_SECRET } from "../secrets";
 import { BadRequestException } from "../exceptions/bad-requests";
 import { ErrorCode } from "../exceptions/root";
-import { UnprocessbleEntity } from "../exceptions/validation";
+import { UnprocessableEntity } from "../exceptions/validation";
 import { SignUpSchema } from "../schema/users";
+import { NotFoundException } from "../exceptions/not-found";
 
 export const signup = async (
   req: Request,
@@ -36,13 +37,16 @@ export const signup = async (
     });
     res.json(user);
   } catch (err: any) {
-    next(
-      new UnprocessbleEntity(
-        err?.cause?.issues || [],
-        "Unprocessable Entity",
-        ErrorCode.UNPROCESSABLE_ENTITY
-      )
-    );
+    if (err.name === "ZodError") {
+      return next(
+        new UnprocessableEntity(
+          err.errors,
+          "Invalid data provided",
+          ErrorCode.UNPROCESSABLE_ENTITY
+        )
+      );
+    }
+    next(err);
   }
 };
 
@@ -57,7 +61,7 @@ export const login = async (
     let user = await prismaClient.user.findFirst({ where: { email } });
     if (!user) {
       return next(
-        new BadRequestException("User doesn't exist", ErrorCode.USER_NOT_FOUND)
+        new NotFoundException("User not found", ErrorCode.USER_NOT_FOUND)
       );
     }
 
@@ -79,12 +83,6 @@ export const login = async (
 
     res.json({ user, token });
   } catch (err: any) {
-    next(
-      new UnprocessbleEntity(
-        err?.cause?.issues || [],
-        "Unprocessable Entity",
-        ErrorCode.UNPROCESSABLE_ENTITY
-      )
-    );
+    next(err);
   }
 };
