@@ -1,3 +1,4 @@
+import { updateUser } from "./../controllers/users";
 import { z } from "zod";
 
 export const SignUpSchema = z.object({
@@ -12,4 +13,10 @@ export const AddressSchema = z.object({
   postalCode: z.string().length(8),
   country: z.string(),
   city: z.string(),
+});
+
+export const UpdateUserSchema = z.object({
+  name: z.string().optional(),
+  defaultShippingAddress: z.number().optional(),
+  defaultBillingAddress: z.number().optional(),
 });
