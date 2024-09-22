@@ -132,3 +132,100 @@ export const getOrderById = async (req: Request, res: Response) => {
     throw new NotFoundException("Order not found", ErrorCode.ORDER_NOT_FOUND);
   }
 };
+
+export const listAllOrders = async (req: Request, res: Response) => {
+  let whereClause = {};
+
+  const status = req.query.status;
+
+  if (status) {
+    whereClause = {
+      status,
+    };
+  }
+
+  const orders = await prismaClient.order.findMany({
+    where: whereClause,
+    skip: +req.query.skip! || 0,
+    take: 5,
+  });
+
+  res.json(orders);
+};
+
+export const changeStatus = async (req: Request, res: Response) => {
+  return await prismaClient.$transaction(async (tx) => {
+    try {
+      const order = await tx.order.findFirst({
+        where: {
+          id: +req.params.id,
+        },
+      });
+
+      if (!order) {
+        throw new NotFoundException(
+          "Order not found",
+          ErrorCode.ORDER_NOT_FOUND
+        );
+      }
+
+      const updatedOrder = await tx.order.update({
+        where: {
+          id: order.id,
+        },
+        data: {
+          status: req.body.status,
+        },
+      });
+
+      await tx.orderEvents.create({
+        data: {
+          orderId: order.id,
+          status: req.body.status,
+        },
+      });
+
+      return res.json(updatedOrder);
+    } catch (error) {
+      throw new NotFoundException("Order not found", ErrorCode.ORDER_NOT_FOUND);
+    }
+  });
+};
+
+export const listUserOrders = async (req: Request, res: Response) => {
+  try {
+    const userId = req.user.id;
+
+    const skip = +req.query.skip! || 0;
+    const take = +req.query.take! || 10;
+
+    const orders = await prismaClient.order.findMany({
+      where: {
+        userId: userId,
+      },
+      include: {
+        products: {
+          include: {
+            product: true,
+          },
+        },
+        events: true,
+      },
+      skip: skip,
+      take: take,
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
+
+    if (orders.length === 0) {
+      throw new NotFoundException("No orders found", ErrorCode.ORDER_NOT_FOUND);
+    }
+
+    return res.json(orders);
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ message: "An error occurred while retrieving user orders" });
+  }
+};
