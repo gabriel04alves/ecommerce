@@ -1,0 +1,864 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "E-commerce API",
+    "description": "API de e-commerce para gerenciamento de usuários, autenticação e operações relacionadas.",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3000/api",
+      "description": "Servidor local"
+    }
+  ],
+  "paths": {
+    "/auth/signup": {
+      "post": {
+        "summary": "Cadastrar um novo usuário",
+        "tags": ["Auth"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "example": "John Doe"
+                  },
+                  "email": {
+                    "type": "string",
+                    "example": "johndoe@example.com"
+                  },
+                  "password": {
+                    "type": "string",
+                    "example": "senha123"
+                  }
+                },
+                "required": ["name", "email", "password"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Usuário cadastrado com sucesso",
+            "content": {
+              "application/json": {
+                "example": {
+                  "id": 1,
+                  "name": "John Doe",
+                  "email": "johndoe@example.com"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Usuário já existe"
+          }
+        }
+      }
+    },
+    "/auth/login": {
+      "post": {
+        "summary": "Fazer login",
+        "tags": ["Auth"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "example": "johndoe@example.com"
+                  },
+                  "password": {
+                    "type": "string",
+                    "example": "senha123"
+                  }
+                },
+                "required": ["email", "password"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Login realizado com sucesso",
+            "content": {
+              "application/json": {
+                "example": {
+                  "user": {
+                    "id": 1,
+                    "name": "John Doe",
+                    "email": "johndoe@example.com"
+                  },
+                  "token": "jwt-token-aqui"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Senha incorreta"
+          },
+          "404": {
+            "description": "Usuário não encontrado"
+          }
+        }
+      }
+    },
+    "/auth/me": {
+      "get": {
+        "summary": "Obter dados do usuário autenticado",
+        "tags": ["Auth"],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Dados do usuário autenticado",
+            "content": {
+              "application/json": {
+                "example": {
+                  "id": 1,
+                  "name": "John Doe",
+                  "email": "johndoe@example.com"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Não autorizado"
+          }
+        }
+      }
+    },
+    "/users": {
+      "get": {
+        "summary": "Listar usuários",
+        "tags": ["User"],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "skip",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "example": 0
+            },
+            "description": "Pular um número de resultados"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Lista de usuários",
+            "content": {
+              "application/json": {
+                "example": [
+                  {
+                    "id": 1,
+                    "name": "John Doe",
+                    "email": "johndoe@example.com"
+                  },
+                  {
+                    "id": 2,
+                    "name": "Jane Doe",
+                    "email": "janedoe@example.com"
+                  }
+                ]
+              }
+            }
+          },
+          "401": {
+            "description": "Não autorizado"
+          }
+        }
+      }
+    },
+    "/users/{id}": {
+      "get": {
+        "summary": "Obter um usuário pelo ID",
+        "tags": ["User"],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "example": 1
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Dados do usuário",
+            "content": {
+              "application/json": {
+                "example": {
+                  "id": 1,
+                  "name": "John Doe",
+                  "email": "johndoe@example.com",
+                  "addresses": [
+                    {
+                      "lineOne": "Rua Exemplo, 123",
+                      "city": "São Paulo",
+                      "postalCode": "01000-000",
+                      "country": "Brasil"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Usuário não encontrado"
+          },
+          "401": {
+            "description": "Não autorizado"
+          }
+        }
+      }
+    },
+    "/users/address": {
+      "post": {
+        "summary": "Adicionar um novo endereço",
+        "tags": ["User"],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "lineOne": {
+                    "type": "string",
+                    "example": "Rua Exemplo, 123"
+                  },
+                  "lineTwo": {
+                    "type": "string",
+                    "example": "Apartamento 45"
+                  },
+                  "postalCode": {
+                    "type": "string",
+                    "example": "01000-000"
+                  },
+                  "country": {
+                    "type": "string",
+                    "example": "Brasil"
+                  },
+                  "city": {
+                    "type": "string",
+                    "example": "São Paulo"
+                  }
+                },
+                "required": ["lineOne", "postalCode", "country", "city"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Endereço adicionado com sucesso",
+            "content": {
+              "application/json": {
+                "example": {
+                  "id": 1,
+                  "lineOne": "Rua Exemplo, 123",
+                  "postalCode": "01000-000",
+                  "country": "Brasil",
+                  "city": "São Paulo"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Não autorizado"
+          }
+        }
+      }
+    },
+    "/products": {
+      "post": {
+        "summary": "Criar um novo produto",
+        "tags": ["Product"],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "example": "Produto Exemplo"
+                  },
+                  "price": {
+                    "type": "number",
+                    "example": 99.99
+                  },
+                  "tags": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "example": ["tag1", "tag2"]
+                  }
+                },
+                "required": ["name", "price", "tags"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Produto criado com sucesso",
+            "content": {
+              "application/json": {
+                "example": {
+                  "id": 1,
+                  "name": "Produto Exemplo",
+                  "price": 99.99,
+                  "tags": "tag1,tag2"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Não autorizado"
+          }
+        }
+      },
+      "get": {
+        "summary": "Listar produtos",
+        "tags": ["Product"],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "skip",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "example": 0
+            },
+            "description": "Número de resultados a pular"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Lista de produtos",
+            "content": {
+              "application/json": {
+                "example": {
+                  "count": 2,
+                  "data": [
+                    {
+                      "id": 1,
+                      "name": "Produto Exemplo",
+                      "price": 99.99,
+                      "tags": "tag1,tag2"
+                    },
+                    {
+                      "id": 2,
+                      "name": "Outro Produto",
+                      "price": 199.99,
+                      "tags": "tag3,tag4"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Não autorizado"
+          }
+        }
+      }
+    },
+    "/products/multiple": {
+      "post": {
+        "summary": "Criar múltiplos produtos",
+        "tags": ["Product"],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "type": "string",
+                      "example": "Produto Exemplo"
+                    },
+                    "price": {
+                      "type": "number",
+                      "example": 99.99
+                    },
+                    "tags": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      },
+                      "example": ["tag1", "tag2"]
+                    }
+                  },
+                  "required": ["name", "price", "tags"]
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Produtos criados com sucesso",
+            "content": {
+              "application/json": {
+                "example": [
+                  {
+                    "id": 1,
+                    "name": "Produto 1",
+                    "price": 99.99,
+                    "tags": "tag1,tag2"
+                  },
+                  {
+                    "id": 2,
+                    "name": "Produto 2",
+                    "price": 199.99,
+                    "tags": "tag3,tag4"
+                  }
+                ]
+              }
+            }
+          },
+          "401": {
+            "description": "Não autorizado"
+          }
+        }
+      }
+    },
+    "/products/{id}": {
+      "put": {
+        "summary": "Atualizar um produto",
+        "tags": ["Product"],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "example": 1
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "example": "Produto Atualizado"
+                  },
+                  "price": {
+                    "type": "number",
+                    "example": 149.99
+                  },
+                  "tags": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "example": ["tag5", "tag6"]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Produto atualizado com sucesso",
+            "content": {
+              "application/json": {
+                "example": {
+                  "id": 1,
+                  "name": "Produto Atualizado",
+                  "price": 149.99,
+                  "tags": "tag5,tag6"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Produto não encontrado"
+          },
+          "401": {
+            "description": "Não autorizado"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Deletar um produto",
+        "tags": ["Product"],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "example": 1
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Produto deletado com sucesso",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Product deleted"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Produto não encontrado"
+          },
+          "401": {
+            "description": "Não autorizado"
+          }
+        }
+      },
+      "get": {
+        "summary": "Obter um produto por ID",
+        "tags": ["Product"],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "example": 1
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Produto encontrado",
+            "content": {
+              "application/json": {
+                "example": {
+                  "id": 1,
+                  "name": "Produto Exemplo",
+                  "price": 99.99,
+                  "tags": "tag1,tag2"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Produto não encontrado"
+          },
+          "401": {
+            "description": "Não autorizado"
+          }
+        }
+      }
+    },
+    "/cart": {
+      "post": {
+        "summary": "Add item to cart",
+        "tags": ["Cart"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddCartItem"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Item added to cart successfully"
+          },
+          "404": {
+            "description": "Product not found"
+          },
+          "403": {
+            "description": "Unauthorized access"
+          }
+        }
+      },
+      "get": {
+        "summary": "Get cart items",
+        "tags": ["Cart"],
+        "responses": {
+          "200": {
+            "description": "Cart items retrieved successfully"
+          },
+          "404": {
+            "description": "Cart is empty"
+          }
+        }
+      }
+    },
+    "/cart/{id}": {
+      "delete": {
+        "summary": "Delete item from cart",
+        "tags": ["Cart"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Cart item deleted"
+          },
+          "404": {
+            "description": "Cart item not found"
+          },
+          "403": {
+            "description": "Unauthorized to delete this cart item"
+          }
+        }
+      },
+      "put": {
+        "summary": "Change item quantity in cart",
+        "tags": ["Cart"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChangeQuantity"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Cart item quantity updated"
+          },
+          "404": {
+            "description": "Cart item not found"
+          },
+          "403": {
+            "description": "Unauthorized access"
+          }
+        }
+      }
+    },
+    "/orders": {
+      "post": {
+        "summary": "Create an order",
+        "tags": ["Order"],
+        "responses": {
+          "200": {
+            "description": "Order created successfully"
+          },
+          "404": {
+            "description": "Cart is empty or address not found"
+          }
+        }
+      },
+      "get": {
+        "summary": "List user orders",
+        "tags": ["Order"],
+        "responses": {
+          "200": {
+            "description": "User orders retrieved"
+          },
+          "404": {
+            "description": "No orders found"
+          }
+        }
+      }
+    },
+    "/orders/{id}": {
+      "get": {
+        "summary": "Get order by ID",
+        "tags": ["Order"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Order details retrieved"
+          },
+          "404": {
+            "description": "Order not found"
+          }
+        }
+      },
+      "put": {
+        "summary": "Cancel an order",
+        "tags": ["Order"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Order cancelled successfully"
+          },
+          "400": {
+            "description": "Order is already cancelled"
+          },
+          "404": {
+            "description": "Order not found"
+          }
+        }
+      }
+    },
+    "/orders/index": {
+      "get": {
+        "summary": "List all orders (Admin)",
+        "tags": ["Order"],
+        "parameters": [
+          {
+            "name": "status",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Orders retrieved"
+          }
+        }
+      }
+    },
+    "/orders/{id}/status": {
+      "get": {
+        "summary": "Change order status (Admin)",
+        "tags": ["Order"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChangeOrderStatus"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Order status updated"
+          },
+          "404": {
+            "description": "Order not found"
+          }
+        }
+      }
+    }
+  },
+
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer"
+      }
+    }
+  }
+}
