@@ -11,6 +11,14 @@
       "description": "Servidor local"
     }
   ],
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer"
+      }
+    }
+  },
   "paths": {
     "/auth/signup": {
       "post": {
@@ -314,6 +322,10 @@
                 "type": "object",
                 "properties": {
                   "name": {
+                    "type": "string",
+                    "example": "Produto Exemplo"
+                  },
+                  "description": {
                     "type": "string",
                     "example": "Produto Exemplo"
                   },
@@ -849,15 +861,6 @@
             "description": "Order not found"
           }
         }
-      }
-    }
-  },
-
-  "components": {
-    "securitySchemes": {
-      "bearerAuth": {
-        "type": "http",
-        "scheme": "bearer"
       }
     }
   }
