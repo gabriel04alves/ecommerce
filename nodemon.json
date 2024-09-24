@@ -1,5 +1,9 @@
 {
   "watch": ["src"],
   "ext": ".js,.ts",
-  "exec": "npx ts-node ./src/index.ts"
+  "exec": "npx ts-node ./src/index.ts",
+  "ignore": ["src/swagger.ts"],
+  "events": {
+    "restart": "npm run swagger"
+  }
 }
