@@ -22,7 +22,7 @@
   "paths": {
     "/auth/signup": {
       "post": {
-        "summary": "Cadastrar um novo usuário",
+        "summary": "Sign up",
         "tags": ["Auth"],
         "requestBody": {
           "required": true,
@@ -33,11 +33,11 @@
                 "properties": {
                   "name": {
                     "type": "string",
-                    "example": "John Doe"
+                    "example": "Tux Linux"
                   },
                   "email": {
                     "type": "string",
-                    "example": "johndoe@example.com"
+                    "example": "tuxlinux@example.com"
                   },
                   "password": {
                     "type": "string",
@@ -51,26 +51,27 @@
         },
         "responses": {
           "200": {
-            "description": "Usuário cadastrado com sucesso",
+            "description": "User registered successfully",
             "content": {
               "application/json": {
                 "example": {
                   "id": 1,
-                  "name": "John Doe",
-                  "email": "johndoe@example.com"
+                  "name": "Tux Linux",
+                  "email": "tuxlinux@example.com"
                 }
               }
             }
           },
           "400": {
-            "description": "Usuário já existe"
+            "description": "User already exists"
           }
         }
       }
     },
+
     "/auth/login": {
       "post": {
-        "summary": "Fazer login",
+        "summary": "Login",
         "tags": ["Auth"],
         "requestBody": {
           "required": true,
@@ -81,7 +82,7 @@
                 "properties": {
                   "email": {
                     "type": "string",
-                    "example": "johndoe@example.com"
+                    "example": "tuxlinux@example.com"
                   },
                   "password": {
                     "type": "string",
@@ -95,32 +96,33 @@
         },
         "responses": {
           "200": {
-            "description": "Login realizado com sucesso",
+            "description": "Login successful",
             "content": {
               "application/json": {
                 "example": {
                   "user": {
                     "id": 1,
-                    "name": "John Doe",
-                    "email": "johndoe@example.com"
+                    "name": "Tux Linux",
+                    "email": "tuxlinux@example.com"
                   },
-                  "token": "jwt-token-aqui"
+                  "token": "jwt-token-here"
                 }
               }
             }
           },
           "400": {
-            "description": "Senha incorreta"
+            "description": "Incorrect password"
           },
           "404": {
-            "description": "Usuário não encontrado"
+            "description": "User not found"
           }
         }
       }
     },
+
     "/auth/me": {
       "get": {
-        "summary": "Obter dados do usuário autenticado",
+        "summary": "Get authenticated user data",
         "tags": ["Auth"],
         "security": [
           {
@@ -129,26 +131,27 @@
         ],
         "responses": {
           "200": {
-            "description": "Dados do usuário autenticado",
+            "description": "Authenticated user data",
             "content": {
               "application/json": {
                 "example": {
                   "id": 1,
-                  "name": "John Doe",
-                  "email": "johndoe@example.com"
+                  "name": "Tux Linux",
+                  "email": "tuxlinux@example.com"
                 }
               }
             }
           },
           "401": {
-            "description": "Não autorizado"
+            "description": "Unauthorized"
           }
         }
       }
     },
+
     "/users": {
       "get": {
-        "summary": "Listar usuários",
+        "summary": "List users with pagination - (Admin)",
         "tags": ["User"],
         "security": [
           {
@@ -157,44 +160,99 @@
         ],
         "parameters": [
           {
-            "name": "skip",
+            "name": "page",
             "in": "query",
             "schema": {
               "type": "integer",
-              "example": 0
+              "example": 1
             },
-            "description": "Pular um número de resultados"
+            "description": "Page number to be returned (starting from 1)"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "example": 10
+            },
+            "description": "Maximum number of users to be returned per page"
           }
         ],
         "responses": {
           "200": {
-            "description": "Lista de usuários",
+            "description": "List of users",
             "content": {
               "application/json": {
-                "example": [
-                  {
-                    "id": 1,
-                    "name": "John Doe",
-                    "email": "johndoe@example.com"
-                  },
-                  {
-                    "id": 2,
-                    "name": "Jane Doe",
-                    "email": "janedoe@example.com"
-                  }
-                ]
+                "example": {
+                  "users": [
+                    {
+                      "id": 1,
+                      "name": "Tux Linux",
+                      "email": "tuxlinux@example.com"
+                    },
+                    {
+                      "id": 2,
+                      "name": "Tux User",
+                      "email": "tuxuser@example.com"
+                    }
+                  ],
+                  "total": 20,
+                  "page": 1,
+                  "limit": 10
+                }
               }
             }
           },
           "401": {
-            "description": "Não autorizado"
+            "description": "Unauthorized"
+          }
+        }
+      },
+      "put": {
+        "summary": "Update user information",
+        "tags": ["User"],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": true
+              },
+              "example": {
+                "Field": "Value"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "User updated successfully",
+            "content": {
+              "application/json": {
+                "example": {
+                  "id": 1,
+                  "name": "Tux Linux",
+                  "email": "tuxlinux@example.com"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
           }
         }
       }
     },
+
     "/users/{id}": {
       "get": {
-        "summary": "Obter um usuário pelo ID",
+        "summary": "Get a user by ID - (Admin)",
         "tags": ["User"],
         "security": [
           {
@@ -214,41 +272,45 @@
         ],
         "responses": {
           "200": {
-            "description": "Dados do usuário",
+            "description": "User data",
             "content": {
               "application/json": {
                 "example": {
                   "id": 1,
-                  "name": "John Doe",
-                  "email": "johndoe@example.com",
-                  "addresses": [
-                    {
-                      "lineOne": "Rua Exemplo, 123",
-                      "city": "São Paulo",
-                      "postalCode": "01000-000",
-                      "country": "Brasil"
-                    }
-                  ]
+                  "name": "Tux Linux",
+                  "email": "tuxlinux@example.com"
                 }
               }
             }
           },
           "404": {
-            "description": "Usuário não encontrado"
+            "description": "User not found"
           },
           "401": {
-            "description": "Não autorizado"
+            "description": "Unauthorized"
           }
         }
       }
     },
-    "/users/address": {
-      "post": {
-        "summary": "Adicionar um novo endereço",
+
+    "/users/{id}/role": {
+      "put": {
+        "summary": "Change user role - (Admin)",
         "tags": ["User"],
         "security": [
           {
             "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "example": 1
+            }
           }
         ],
         "requestBody": {
@@ -258,53 +320,110 @@
               "schema": {
                 "type": "object",
                 "properties": {
-                  "lineOne": {
+                  "role": {
                     "type": "string",
-                    "example": "Rua Exemplo, 123"
-                  },
-                  "lineTwo": {
-                    "type": "string",
-                    "example": "Apartamento 45"
-                  },
-                  "postalCode": {
-                    "type": "string",
-                    "example": "01000-000"
-                  },
-                  "country": {
-                    "type": "string",
-                    "example": "Brasil"
-                  },
-                  "city": {
-                    "type": "string",
-                    "example": "São Paulo"
+                    "example": "ADMIN"
                   }
                 },
-                "required": ["lineOne", "postalCode", "country", "city"]
+                "required": ["role"]
+              },
+              "example": {
+                "role": "ADMIN"
               }
             }
           }
         },
         "responses": {
           "200": {
-            "description": "Endereço adicionado com sucesso",
+            "description": "User role changed successfully",
             "content": {
               "application/json": {
                 "example": {
                   "id": 1,
-                  "lineOne": "Rua Exemplo, 123",
-                  "postalCode": "01000-000",
-                  "country": "Brasil",
-                  "city": "São Paulo"
+                  "role": "ADMIN"
                 }
               }
             }
           },
+          "404": {
+            "description": "User not found"
+          },
           "401": {
-            "description": "Não autorizado"
+            "description": "Unauthorized"
           }
         }
       }
     },
+
+    "/users/address/{id}": {
+      "delete": {
+        "summary": "Delete an address by ID",
+        "tags": ["User"],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "example": 1
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Address deleted successfully"
+          },
+          "404": {
+            "description": "Address not found"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+
+    "/users/address": {
+      "get": {
+        "summary": "List all addresses for authenticated user",
+        "tags": ["User"],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of addresses",
+            "content": {
+              "application/json": {
+                "example": [
+                  {
+                    "id": 1,
+                    "lineOne": "Rua Exemplo, 456",
+                    "lineTwo": "Apto 101",
+                    "city": "Cidade Exemplo",
+                    "country": "Brasil",
+                    "postalCode": "00000-000",
+                    "userId": 1
+                  }
+                ]
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+
     "/products": {
       "post": {
         "summary": "Criar um novo produto",
