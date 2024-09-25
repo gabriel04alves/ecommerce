@@ -27,7 +27,7 @@ orderRoutes.get(
   [authMiddleware, adminMiddleware],
   errorHandler(listUserOrders)
 );
-orderRoutes.get(
+orderRoutes.put(
   "/:id/status",
   [authMiddleware, adminMiddleware],
   errorHandler(changeStatus)

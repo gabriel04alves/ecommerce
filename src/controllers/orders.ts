@@ -194,7 +194,7 @@ export const changeStatus = async (req: Request, res: Response) => {
 
 export const listUserOrders = async (req: Request, res: Response) => {
   try {
-    const userId = req.user.id;
+    const userId = +req.params.id;
 
     const skip = +req.query.skip! || 0;
     const take = +req.query.take! || 10;
