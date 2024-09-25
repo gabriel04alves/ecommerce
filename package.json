@@ -1,11 +1,11 @@
 {
-  "name": "teste2",
+  "name": "ecommerce",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
     "start": "npx nodemon",
-    "dev": "ts-node ./src/index.ts",
+    "dev": "ts-node ./src/app.ts",
     "migrate": "prisma migrate dev",
     "generate": "prisma generate",
     "swagger": "npx ts-node ./src/swagger.ts"

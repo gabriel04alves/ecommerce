@@ -1,9 +1,9 @@
 import { NextFunction, Request, Response } from "express";
-import { UnauthorizedException } from "../exceptions/unauthorized";
-import { ErrorCode } from "../exceptions/root";
+import { UnauthorizedException } from "../exceptions/unauthorized.exception";
+import { ErrorCode } from "../exceptions/root.exception";
 import * as jwt from "jsonwebtoken";
-import { JWT_SECRET } from "../secrets";
-import { prismaClient } from "..";
+import { JWT_SECRET } from "../config/secrets";
+import { prismaClient } from "../app";
 
 const authMiddleware = async (
   req: Request,

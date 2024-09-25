@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { errorHandler } from "../error-handler";
+import { errorHandler } from "../exceptions/error-handler";
 import {
   createProduct,
   createProducts,
@@ -7,9 +7,9 @@ import {
   getProductById,
   listProducts,
   updateProduct,
-} from "../controllers/products";
-import authMiddleware from "../middlewares/auth";
-import adminMiddleware from "../middlewares/admin";
+} from "../controllers/products.controller";
+import authMiddleware from "../middlewares/auth.middleware";
+import adminMiddleware from "../middlewares/admin.middleware";
 
 const productsRoutes: Router = Router();
 

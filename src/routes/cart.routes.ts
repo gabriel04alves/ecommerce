@@ -1,12 +1,12 @@
 import { Router } from "express";
-import authMiddleware from "../middlewares/auth";
-import { errorHandler } from "../error-handler";
+import authMiddleware from "../middlewares/auth.middleware";
+import { errorHandler } from "../exceptions/error-handler";
 import {
   addItemToCart,
   changeQuantity,
   deleteItemFromCart,
   getCart,
-} from "../controllers/cart";
+} from "../controllers/cart.controller";
 
 const cartRoutes: Router = Router();
 

@@ -1,6 +1,6 @@
 import { Router } from "express";
-import authMiddleware from "../middlewares/auth";
-import { errorHandler } from "../error-handler";
+import authMiddleware from "../middlewares/auth.middleware";
+import { errorHandler } from "../exceptions/error-handler";
 import {
   cancelOrder,
   changeStatus,
@@ -9,8 +9,8 @@ import {
   listAllOrders,
   listOrders,
   listUserOrders,
-} from "../controllers/orders";
-import adminMiddleware from "../middlewares/admin";
+} from "../controllers/orders.controller";
+import adminMiddleware from "../middlewares/admin.middleware";
 
 const orderRoutes: Router = Router();
 

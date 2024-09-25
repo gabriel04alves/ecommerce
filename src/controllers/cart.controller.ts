@@ -1,10 +1,13 @@
 import { Request, Response } from "express";
-import { CreateCartSchema, ChangeQuantitySchema } from "../schema/cart";
-import { NotFoundException } from "../exceptions/not-found";
-import { ErrorCode } from "../exceptions/root";
+import {
+  CreateCartSchema,
+  ChangeQuantitySchema,
+} from "../validation/cart.validation";
+import { NotFoundException } from "../exceptions/not-found.exception";
+import { ErrorCode } from "../exceptions/root.exception";
 import { Product } from "@prisma/client";
-import { prismaClient } from "..";
-import { UnauthorizedException } from "../exceptions/unauthorized";
+import { prismaClient } from "../app";
+import { UnauthorizedException } from "../exceptions/unauthorized.exception";
 
 export const addItemToCart = async (req: Request, res: Response) => {
   const validatedData = CreateCartSchema.parse(req.body);

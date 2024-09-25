@@ -1,11 +1,10 @@
 import express, { Express } from "express";
-import { PORT } from "./secrets";
+import { PORT } from "./config/secrets";
 import rootRouter from "./routes";
 import { PrismaClient } from "@prisma/client";
-import { errorMiddleware } from "./middlewares/errors";
+import { errorMiddleware } from "./middlewares/errors.middleware";
 import swaggerUi from "swagger-ui-express";
 import swaggerDocument from "../swagger.json";
-import { SignUpSchema } from "./schema/users";
 
 const app: Express = express();
 

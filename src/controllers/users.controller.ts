@@ -3,13 +3,13 @@ import {
   AddressSchema,
   changeUserRoleSchema,
   UpdateUserSchema,
-} from "../schema/users";
-import { prismaClient } from "..";
-import { NotFoundException } from "../exceptions/not-found";
-import { ErrorCode } from "../exceptions/root";
+} from "../validation/users.validation";
+import { prismaClient } from "../app";
+import { NotFoundException } from "../exceptions/not-found.exception";
+import { ErrorCode } from "../exceptions/root.exception";
 import { Address } from "@prisma/client";
-import { BadRequestException } from "../exceptions/bad-requests";
-import { UnauthorizedException } from "../exceptions/unauthorized";
+import { BadRequestException } from "../exceptions/bad-requests.exception";
+import { UnauthorizedException } from "../exceptions/unauthorized.exception";
 
 export const addAddress = async (req: Request, res: Response) => {
   try {

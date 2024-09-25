@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
-import { prismaClient } from "..";
-import { NotFoundException } from "../exceptions/not-found";
-import { ErrorCode } from "../exceptions/root";
+import { prismaClient } from "../app";
+import { NotFoundException } from "../exceptions/not-found.exception";
+import { ErrorCode } from "../exceptions/root.exception";
 
 export const createProduct = async (req: Request, res: Response) => {
   const product = await prismaClient.product.create({
