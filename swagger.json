@@ -758,23 +758,39 @@
       }
     },
 
-    "/cart": {
+    "/carts": {
       "post": {
         "summary": "Add item to cart",
         "tags": ["Cart"],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
         "requestBody": {
           "required": true,
           "content": {
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/AddCartItem"
+              },
+              "example": {
+                "productId": 36,
+                "quantity": 5
               }
             }
           }
         },
         "responses": {
           "200": {
-            "description": "Item added to cart successfully"
+            "description": "Item added to cart successfully",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Item added successfully"
+                }
+              }
+            }
           },
           "404": {
             "description": "Product not found"
@@ -787,9 +803,32 @@
       "get": {
         "summary": "Get cart items",
         "tags": ["Cart"],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
         "responses": {
           "200": {
-            "description": "Cart items retrieved successfully"
+            "description": "Cart items retrieved successfully",
+            "content": {
+              "application/json": {
+                "example": [
+                  {
+                    "id": 1,
+                    "name": "Clean Code",
+                    "quantity": 1,
+                    "price": 32.99
+                  },
+                  {
+                    "id": 2,
+                    "name": "The Mythical Man-Month",
+                    "quantity": 1,
+                    "price": 28.0
+                  }
+                ]
+              }
+            }
           },
           "404": {
             "description": "Cart is empty"
@@ -797,10 +836,16 @@
         }
       }
     },
-    "/cart/{id}": {
+
+    "/carts/{id}": {
       "delete": {
         "summary": "Delete item from cart",
         "tags": ["Cart"],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
         "parameters": [
           {
             "name": "id",
@@ -813,7 +858,14 @@
         ],
         "responses": {
           "200": {
-            "description": "Cart item deleted"
+            "description": "Cart item deleted",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Item deleted successfully"
+                }
+              }
+            }
           },
           "404": {
             "description": "Cart item not found"
@@ -826,6 +878,11 @@
       "put": {
         "summary": "Change item quantity in cart",
         "tags": ["Cart"],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
         "parameters": [
           {
             "name": "id",
@@ -842,13 +899,23 @@
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/ChangeQuantity"
+              },
+              "example": {
+                "quantity": 7
               }
             }
           }
         },
         "responses": {
           "200": {
-            "description": "Cart item quantity updated"
+            "description": "Cart item quantity updated",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Quantity updated successfully"
+                }
+              }
+            }
           },
           "404": {
             "description": "Cart item not found"
