@@ -9,19 +9,25 @@ import { NotFoundException } from "../exceptions/not-found";
 import { ErrorCode } from "../exceptions/root";
 import { Address } from "@prisma/client";
 import { BadRequestException } from "../exceptions/bad-requests";
+import { UnauthorizedException } from "../exceptions/unauthorized";
 
 export const addAddress = async (req: Request, res: Response) => {
-  AddressSchema.parse(req.body);
+  try {
+    const validatedData = AddressSchema.parse(req.body);
 
-  const address = await prismaClient.address.create({
-    data: {
-      ...req.body,
-      userId: req.user.id,
-    },
-  });
+    const address = await prismaClient.address.create({
+      data: {
+        ...validatedData,
+        userId: req.user.id,
+      },
+    });
 
-  res.json(address);
+    res.json(address);
+  } catch (error) {
+    throw new UnauthorizedException("Unauthorized", ErrorCode.UNAUTHORIZED);
+  }
 };
+
 export const deleteAddress = async (req: Request, res: Response) => {
   try {
     await prismaClient.address.delete({

@@ -166,7 +166,7 @@
               "type": "integer",
               "example": 1
             },
-            "description": "Page number to be returned (starting from 1)"
+            "description": "Page number to retrieve (starting from 1)"
           },
           {
             "name": "limit",
@@ -175,7 +175,7 @@
               "type": "integer",
               "example": 10
             },
-            "description": "Maximum number of users to be returned per page"
+            "description": "Maximum number of users per page"
           }
         ],
         "responses": {
@@ -225,7 +225,7 @@
                 "additionalProperties": true
               },
               "example": {
-                "Field": "Value"
+                "field": "value"
               }
             }
           }
@@ -391,7 +391,7 @@
 
     "/users/address": {
       "get": {
-        "summary": "List all addresses for authenticated user",
+        "summary": "List all addresses for the authenticated user",
         "tags": ["User"],
         "security": [
           {
@@ -400,22 +400,102 @@
         ],
         "responses": {
           "200": {
-            "description": "List of addresses",
+            "description": "List of addresses for the authenticated user",
             "content": {
               "application/json": {
                 "example": [
                   {
                     "id": 1,
-                    "lineOne": "Rua Exemplo, 456",
-                    "lineTwo": "Apto 101",
-                    "city": "Cidade Exemplo",
-                    "country": "Brasil",
+                    "lineOne": "Example Street, 456",
+                    "lineTwo": "Apt 101",
+                    "city": "Example City",
+                    "country": "Brazil",
                     "postalCode": "00000-000",
+                    "userId": 1
+                  },
+                  {
+                    "id": 2,
+                    "lineOne": "Another Street, 789",
+                    "lineTwo": "",
+                    "city": "Another City",
+                    "country": "Brazil",
+                    "postalCode": "11111-111",
                     "userId": 1
                   }
                 ]
               }
             }
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      },
+      "post": {
+        "summary": "Add a new address for authenticated user",
+        "tags": ["User"],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "lineOne": {
+                    "type": "string",
+                    "example": "123 Example Street"
+                  },
+                  "lineTwo": {
+                    "type": "string",
+                    "example": "Apt 101"
+                  },
+                  "city": {
+                    "type": "string",
+                    "example": "Example City"
+                  },
+                  "country": {
+                    "type": "string",
+                    "example": "Brazil"
+                  },
+                  "postalCode": {
+                    "type": "string",
+                    "example": "00000000"
+                  }
+                },
+                "required": [
+                  "lineOne",
+                  "city",
+                  "country",
+                  "postalCode",
+                  "userId"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Address added successfully",
+            "content": {
+              "application/json": {
+                "example": {
+                  "id": 1,
+                  "lineOne": "123 Example Street",
+                  "lineTwo": "Apt 101",
+                  "city": "Example City",
+                  "country": "Brazil",
+                  "postalCode": "00000000"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request body"
           },
           "401": {
             "description": "Unauthorized"
