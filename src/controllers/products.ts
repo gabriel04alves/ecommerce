@@ -29,7 +29,7 @@ export const createProducts = async (req: Request, res: Response) => {
     createdProducts.push(createdProduct);
   }
 
-  res.status(201).json(createdProducts);
+  res.json(createdProducts);
 };
 
 export const updateProduct = async (req: Request, res: Response) => {

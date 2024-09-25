@@ -33,15 +33,7 @@ productsRoutes.delete(
   [authMiddleware, adminMiddleware],
   errorHandler(deleteProduct)
 );
-productsRoutes.get(
-  "/",
-  [authMiddleware, adminMiddleware],
-  errorHandler(listProducts)
-);
-productsRoutes.get(
-  "/:id",
-  [authMiddleware, adminMiddleware],
-  errorHandler(getProductById)
-);
+productsRoutes.get("/", errorHandler(listProducts));
+productsRoutes.get("/:id", errorHandler(getProductById));
 
 export default productsRoutes;
