@@ -41,4 +41,5 @@ app.use(errorMiddleware);
 app.listen(PORT, () => {
   console.log(`Server is running on port http://localhost:${PORT}/`);
   console.log(`Swagger docs available at http://localhost:${PORT}/api-docs`);
+  console.log(`View the DB at http://localhost:5555/`);
 });

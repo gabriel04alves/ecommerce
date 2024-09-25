@@ -4,8 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "start": "npx nodemon",
+    "dev": "ts-node ./src/index.ts",
+    "migrate": "prisma migrate dev",
+    "generate": "prisma generate",
     "swagger": "npx ts-node ./src/swagger.ts"
   },
   "keywords": [],
