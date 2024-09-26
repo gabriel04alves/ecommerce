@@ -25,7 +25,16 @@
             <td>{{ product.name }}</td>
             <td>{{ product.description }}</td>
             <td>{{ formatCurrency(product.price) }}</td>
-            <td>{{ product.tags }}</td>
+            <td>
+              <main class="tags">
+                <span
+                  class="tag is-dark"
+                  v-for="(tag, index) in product.tags"
+                  :key="index"
+                  >{{ tag }}</span
+                >
+              </main>
+            </td>
             <td>{{ formatDate(product.createdAt) }}</td>
             <td>{{ formatDate(product.updatedAt) }}</td>
           </tr>
@@ -53,6 +62,7 @@ export default {
         products.value = response.data.map((product) => ({
           ...product,
           price: parseFloat(product.price),
+          tags: product.tags.split(","),
         }));
       } catch (err) {
         error.value = "Failed to load products";
@@ -82,7 +92,7 @@ export default {
         minute: "2-digit",
         second: "2-digit",
       };
-      return new Date(dateString).toLocaleDateString("pt-BR", options);
+      return new Date(dateString).toLocaleString("pt-BR", options);
     };
 
     return {
@@ -100,8 +110,6 @@ export default {
 tr,
 th {
   text-align: center;
-}
-th {
 }
 .notification {
   margin-bottom: 1rem;
