@@ -1,4 +1,5 @@
 import express, { Express } from "express";
+import cors from "cors";
 import { PORT } from "./config/secrets";
 import rootRouter from "./routes";
 import { PrismaClient } from "@prisma/client";
@@ -8,10 +9,16 @@ import swaggerDocument from "../swagger.json";
 
 const app: Express = express();
 
+const corsOptions = {
+  origin: "*",
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  credentials: true,
+};
+
+app.use(cors(corsOptions));
+
 app.use(express.json());
-
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
-
 app.use("/api", rootRouter);
 
 export const prismaClient = new PrismaClient({
